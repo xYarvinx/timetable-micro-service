@@ -101,4 +101,18 @@ public class RabbitService {
             throw new RuntimeException("Не удалось получить user ID по токену");
         }
     }
+
+    public Long getUserIdFromToken(String token) {
+        Long response = (Long) rabbitTemplate.convertSendAndReceive(
+                "userExchange",
+                "user.id.by.token.request",
+                token.substring(7)
+        );
+
+        if (response != null) {
+            return response;
+        } else {
+            throw new RuntimeException("Не удалось получить user ID по токену");
+        }
+    }
 }
