@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class AppointmentRequest {
+public class TimetableRequest {
+    private Long hospitalId;
     private Long doctorId;
-    private Long patientId;
     private LocalDateTime from;
     private LocalDateTime to;
     private String room;
