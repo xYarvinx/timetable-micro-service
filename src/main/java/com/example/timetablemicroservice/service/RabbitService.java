@@ -62,6 +62,20 @@ public class RabbitService {
             return response != null && response;
     }
 
+    public Boolean isPacientExists(Long userId) {
+        Map<String, Object> message = new HashMap<>();
+        message.put("userId", userId);
+        message.put("role", "USER");
+
+        Boolean response = (Boolean) rabbitTemplate.convertSendAndReceive(
+                "userExchange",
+                "user.exist.request",
+                message
+        );
+
+        return response != null && response;
+    }
+
 
     public Boolean isHospitalExists(Long hospitalId) {
             Boolean response = (Boolean) rabbitTemplate.convertSendAndReceive(
@@ -85,21 +99,6 @@ public class RabbitService {
             );
 
             return response != null && response;
-    }
-
-    public Long getUserIdByToken(String token) {
-
-        Long response = (Long) rabbitTemplate.convertSendAndReceive(
-                "userExchange",
-                "user.id.by.token.request",
-                token
-        );
-
-        if (response != null) {
-            return response;
-        } else {
-            throw new RuntimeException("Не удалось получить user ID по токену");
-        }
     }
 
     public Long getUserIdFromToken(String token) {

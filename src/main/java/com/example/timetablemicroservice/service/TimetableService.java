@@ -67,6 +67,10 @@ public class TimetableService {
         return rabbitService.getUserIdFromToken(token);
     }
 
+    private boolean isPacientExist(Long userId){
+        return rabbitService.isPacientExists(userId);
+    }
+
     private boolean isTimetableExist(TimetableRequest request) {
         return timetableRepository.existsByDoctorIdAndStartTimeAndEndTime(
                 request.getDoctorId(),
@@ -327,8 +331,13 @@ public class TimetableService {
                 .filter(a -> a.getAppointmentTime().equals(appointmentTime.getTime()))
                 .findFirst()
                 .orElseThrow(() -> new InvalidDataException("Тайм-слот не найден"));
+        Long curUserId = getUserIdFromToken(token);
 
-        appointment.setPatientId(getUserIdFromToken(token));
+        if(!isPacientExist(curUserId)){
+            throw new InvalidTokenException("Текущий пользователь не пациент");
+        }
+
+        appointment.setPatientId(curUserId);
         appointmentRepository.save(appointment);
     }
 
