@@ -2,7 +2,6 @@ FROM azul/zulu-openjdk:17 as builder
 
 WORKDIR /app
 
-
 COPY . .
 
 RUN ./mvnw package -DskipTests
